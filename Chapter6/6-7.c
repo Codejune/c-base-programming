@@ -28,7 +28,7 @@ int main(void)
         if ('0'<= c && c <= '9'){
     		++number_count;
         }
-  }
+    }
     printf("파일 크기 : %d 바이트\n", total_byte);
     printf("파일 줄 수 : %d 행\n", line_count);
     printf("알파벳 문자 수 : %d\n", alphabet_count);
