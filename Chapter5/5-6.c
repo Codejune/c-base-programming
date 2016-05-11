@@ -3,7 +3,7 @@
     윤년은 4로 나누어져야하며 이중 100으로 나누어지지 않으면 윤년이고
     100으로 나누어지나 400으로도 나누어지면 윤년이다. 해당 프로그램은 다중 if-else문으로 작성하라.
 */
-include "stdio.h"
+#include "stdio.h"
 int main(void){
     int year;
     
