@@ -9,6 +9,8 @@
 #include "stdlib.h"
 #include "string.h"
 
+#define MAX_INFIX_SIZE 100
+
 // 공학용 계산기
 void EngineeringCalculator();
 // 일정 관리
@@ -23,6 +25,13 @@ void pause();
 void Judgement_Leap(int, int, int);
 // 일정 체크
 void Check_Schedule(int, int, int, int, int, int);
+// 임시데이터 초기화
+void tmp_Clear();
+// 데이터 초기화
+void schedule_Clear();
+
+int year, month, day, tmp_year, tmp_month, tmp_day;
+char txt_contents[16], tmp_txt_contents[16];
 
 int main(void){
     
@@ -49,8 +58,14 @@ int main(void){
     }
 }
 
+// 공학용 계산기
 void EngineeringCalculator(){
-    printf("this is calculator\n");
+    char infix[MAX_INFIX_SIZE];
+    
+    printf("================================\n\t공학용 계산기\n================================\n");
+    scanf("%s", infix);
+    printf("%s", infix);
+    pause();
 }
 
 void ScheduleManagement(){
@@ -60,10 +75,10 @@ void ScheduleManagement(){
         (일-1)*200을 가로에 배정
     */
     char calendar[5*12][31*200];
-    char txt_contents[200], tmp_txt_contents[200];
+    // 내용을 저장할 배열 선언
     int select_function = 1;
     char select_answer;
-    int i, year, month, day, tmp_year, tmp_month, tmp_day, length;
+    int i, length;
     
     while(select_function != 0){
         
@@ -78,12 +93,10 @@ void ScheduleManagement(){
             
             // 일정 입력                 
             case 1: Terminal_Clear();
-                    tmp_year = year;
-                    tmp_month = month;
-                    tmp_day = day;
-                    *tmp_txt_contents = txt_contents;
+
+                    strcpy(tmp_txt_contents,txt_contents);
                     printf("일정 입력 : ");
-                    scanf("%d %d %d %s", &year, &month, &day, &txt_contents);
+                    scanf("%d %d %d %s", &year, &month, &day, txt_contents);
                     length = strlen(txt_contents);
                     
                     if((year<=0)) {
@@ -97,17 +110,14 @@ void ScheduleManagement(){
                             year = tmp_year;
                             month = tmp_month;
                             day = tmp_day;
-                            *txt_contents = *tmp_txt_contents;
+                            strcpy(txt_contents,tmp_txt_contents);
                         } else {
-                            year = NULL;
-                            month = NULL;
-                            day = NULL;
-                            *txt_contents = NULL;
+                            schedule_Clear();
                         }
                     } else if(tmp_year == year && tmp_month == month && tmp_day == day) {
                         printf("%d년 %d월 %d일에 일정이 있습니다.\n", year, month, day);
                         printf("일정을 유지하려면 Yes(y)를, 덮어쓰려면 No(n)를 입력하세요 : ");
-                        scanf("%c", &select_answer);
+                        scanf("%s", &select_answer);
                         switch(select_answer) {
                             // 일정 덮어쓰기
                             case 'n': printf("일정이 덮어쓰기 되었습니다.");
@@ -117,6 +127,8 @@ void ScheduleManagement(){
                             case 'y': year = tmp_year;
                                       month = tmp_month;
                                       day = tmp_day;
+                                      strcpy(txt_contents,tmp_txt_contents);
+                                      tmp_Clear();
                                       printf("일정이 유지되었습니다.");
                                       break;
                             
@@ -127,22 +139,27 @@ void ScheduleManagement(){
                     } else {
                         printf("%d년 %d월 %d일 %s\n일정을 추가하였습니다.\n", year, month, day, txt_contents);
                     }
+                    // 데이터 임시저장
+                    tmp_year = year;
+                    tmp_month = month;
+                    tmp_day = day;
+                    *tmp_txt_contents = *txt_contents;
                     pause();
                     break;
-                                        
+                                                            
             // 일정 삭제        
             case 2: Terminal_Clear();
+                    printf("일정 입력 : ");
+                    scanf("%d %d %d %s", &year, &month, &day, txt_contents);
                     // 년도가 0일때는 아무 값도 입력받지 않았으므로 일정이 등록되어있지 않음 처리
                     if (year == 0 || month == 0 || day == 0) {
                         printf("일정이 등록되어있지 않습니다.");
                     } else if(tmp_year == year && tmp_month == month && tmp_day == day) {
                         printf("%d년 %d월 %d일에 일정이 있습니다.\n", year, month, day);
-                        year = NULL;
-                        month = NULL;
-                        day = NULL;
-                        *txt_contents = NULL;
+                        schedule_Clear();
+                        tmp_Clear();
                         printf("일정이 삭제되었습니다.\n");
-                    } else if(tmp_year != year && tmp_month != month && tmp_day != day) {
+                    } else if(tmp_year != year || tmp_month != month || tmp_day != day) {
                         printf("%d년 %d월 %d일에 일정이 없습니다.\n", year, month, day);
                     }
                     pause();
@@ -246,10 +263,11 @@ void View_Schedule(int year, int month, int day, char* txt_contents){
                     printf("     ");
                 }
                 // 일정 출력
-                printf("%5s", txt_contents);
+                printf("%5s\n", txt_contents);
+            } else {            
+                // 개행
+                printf("\n\n");
             }
-            // 개행
-            printf("\n");
             // 개행 횟수 +1
             cycle++;
             // 날짜 추가 횟수 초기화
@@ -286,6 +304,17 @@ void Judgement_Leap(int year, int month, int day){
     }
 }
 
+void tmp_Clear(){
+    tmp_year = NULL;
+    tmp_month = NULL;
+    tmp_day = NULL;
+}
+
+void schedule_Clear(){
+    year = NULL;
+    month = NULL;
+    day = NULL;
+}
 void Terminal_Clear(){
     system("clear\n");
 }
