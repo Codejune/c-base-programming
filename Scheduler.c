@@ -1,10 +1,10 @@
 /*
-    Date    : 2016. 05. 15
-    Author  : 김병준, 함정완
-    Major   : 컴퓨터학부
-    Prof    : 문영성 교수
-*/
- 
+ Date    : 2016. 05. 15
+ Author  : 김병준, 함정완
+ Major   : 컴퓨터학부
+ Prof    : 문영성 교수
+ */
+
 #include "stdio.h"
 #include "stdlib.h"
 #include "string.h"
@@ -43,17 +43,17 @@ int main(void){
         Terminal_Clear();
         switch(select_main){
             case 0 : return 0;
-        
+                
             case 1 : EngineeringCalculator();
-                     break;
-        
+                break;
+                
             case 2 : ScheduleManagement();
-                     break;
-                     
-           // 지정된 값 외의 값을 입력하면 에러처리
-           default: printf("잘못 입력하셨습니다. 다시 입력해주세요.\n");
-                    pause();
-                    break;
+                break;
+                
+                // 지정된 값 외의 값을 입력하면 에러처리
+            default: printf("잘못 입력하셨습니다. 다시 입력해주세요.\n");
+                pause();
+                break;
         }
     }
 }
@@ -70,10 +70,10 @@ void EngineeringCalculator(){
 
 void ScheduleManagement(){
     /*
-        세로에 년과 월정보, 가로에 최대 31일에 대한 내용값
-        (년-2016)*12+(달-1)=값을 세로에 배정
-        (일-1)*200을 가로에 배정
-    */
+     세로에 년과 월정보, 가로에 최대 31일에 대한 내용값
+     (년-2016)*12+(달-1)=값을 세로에 배정
+     (일-1)*200을 가로에 배정
+     */
     char calendar[5*12][31*200];
     // 내용을 저장할 배열 선언
     int select_function = 1;
@@ -88,104 +88,104 @@ void ScheduleManagement(){
         scanf("%d",&select_function);
         Terminal_Clear();
         switch(select_function) {
-            // 종료
+                // 종료
             case 0: break;
-            
-            // 일정 입력                 
+                
+                // 일정 입력
             case 1: Terminal_Clear();
-
-                    strcpy(tmp_txt_contents,txt_contents);
-                    printf("일정 입력 : ");
-                    scanf("%d %d %d %s", &year, &month, &day, txt_contents);
-                    length = strlen(txt_contents);
-                    
-                    if((year<=0)) {
-                        printf("잘못된 년도 입력. 다시 입력하세요.\n\n");
-                    } else if((month<1)||(month>12)) {
-                        printf("잘못된 월 입력. 1월에서 12월 사이로 입력하세요\n\n");
-                    // 200바이트 이상의 내용입력시의 에러처리    
-                    } else if (length>16) {
-                        printf("너무 많은 내용을 입력하셨습니다\n\n");
-                        if(tmp_year == year && tmp_month == month && tmp_day == day) {
-                            year = tmp_year;
+                
+                strcpy(tmp_txt_contents,txt_contents);
+                printf("일정 입력 : ");
+                scanf("%d %d %d %s", &year, &month, &day, txt_contents);
+                length = strlen(txt_contents);
+                
+                if((year<=0)) {
+                    printf("잘못된 년도 입력. 다시 입력하세요.\n\n");
+                } else if((month<1)||(month>12)) {
+                    printf("잘못된 월 입력. 1월에서 12월 사이로 입력하세요\n\n");
+                    // 200바이트 이상의 내용입력시의 에러처리
+                } else if (length>16) {
+                    printf("너무 많은 내용을 입력하셨습니다\n\n");
+                    if(tmp_year == year && tmp_month == month && tmp_day == day) {
+                        year = tmp_year;
+                        month = tmp_month;
+                        day = tmp_day;
+                        strcpy(txt_contents,tmp_txt_contents);
+                    } else {
+                        schedule_Clear();
+                    }
+                } else if(tmp_year == year && tmp_month == month && tmp_day == day) {
+                    printf("%d년 %d월 %d일에 일정이 있습니다.\n", year, month, day);
+                    printf("일정을 유지하려면 Yes(y)를, 덮어쓰려면 No(n)를 입력하세요 : ");
+                    scanf("%s", &select_answer);
+                    switch(select_answer) {
+                            // 일정 덮어쓰기
+                        case 'n': printf("일정이 덮어쓰기 되었습니다.");
+                            break;
+                            
+                            // 일정 유지
+                        case 'y': year = tmp_year;
                             month = tmp_month;
                             day = tmp_day;
                             strcpy(txt_contents,tmp_txt_contents);
-                        } else {
-                            schedule_Clear();
-                        }
-                    } else if(tmp_year == year && tmp_month == month && tmp_day == day) {
-                        printf("%d년 %d월 %d일에 일정이 있습니다.\n", year, month, day);
-                        printf("일정을 유지하려면 Yes(y)를, 덮어쓰려면 No(n)를 입력하세요 : ");
-                        scanf("%s", &select_answer);
-                        switch(select_answer) {
-                            // 일정 덮어쓰기
-                            case 'n': printf("일정이 덮어쓰기 되었습니다.");
-                                      break;
-                                    
-                            // 일정 유지
-                            case 'y': year = tmp_year;
-                                      month = tmp_month;
-                                      day = tmp_day;
-                                      strcpy(txt_contents,tmp_txt_contents);
-                                      tmp_Clear();
-                                      printf("일정이 유지되었습니다.");
-                                      break;
+                            tmp_Clear();
+                            printf("일정이 유지되었습니다.");
+                            break;
                             
                             // 지정된 값 외의 값을 입력하면 에러처리
-                            default: printf("잘못 입력하셨습니다. 다시 입력해주세요.");
-                                     break;
-                        }
-                    } else {
-                        printf("%d년 %d월 %d일 %s\n일정을 추가하였습니다.\n", year, month, day, txt_contents);
+                        default: printf("잘못 입력하셨습니다. 다시 입력해주세요.");
+                            break;
                     }
-                    // 데이터 임시저장
-                    tmp_year = year;
-                    tmp_month = month;
-                    tmp_day = day;
-                    *tmp_txt_contents = *txt_contents;
-                    pause();
-                    break;
-                                                            
-            // 일정 삭제        
+                } else {
+                    printf("%d년 %d월 %d일 %s\n일정을 추가하였습니다.\n", year, month, day, txt_contents);
+                }
+                // 데이터 임시저장
+                tmp_year = year;
+                tmp_month = month;
+                tmp_day = day;
+                *tmp_txt_contents = *txt_contents;
+                pause();
+                break;
+                
+                // 일정 삭제
             case 2: Terminal_Clear();
-                    printf("일정 입력 : ");
-                    scanf("%d %d %d %s", &year, &month, &day, txt_contents);
-                    // 년도가 0일때는 아무 값도 입력받지 않았으므로 일정이 등록되어있지 않음 처리
-                    if (year == 0 || month == 0 || day == 0) {
-                        printf("일정이 등록되어있지 않습니다.");
-                    } else if(tmp_year == year && tmp_month == month && tmp_day == day) {
-                        printf("%d년 %d월 %d일에 일정이 있습니다.\n", year, month, day);
-                        schedule_Clear();
-                        tmp_Clear();
-                        printf("일정이 삭제되었습니다.\n");
-                    } else if(tmp_year != year || tmp_month != month || tmp_day != day) {
-                        printf("%d년 %d월 %d일에 일정이 없습니다.\n", year, month, day);
-                    }
-                    pause();
-                    break;
-                    
-            // 일정 보기        
+                printf("일정 입력 : ");
+                scanf("%d %d %d %s", &year, &month, &day, txt_contents);
+                // 년도가 0일때는 아무 값도 입력받지 않았으므로 일정이 등록되어있지 않음 처리
+                if (year == 0 || month == 0 || day == 0) {
+                    printf("일정이 등록되어있지 않습니다.");
+                } else if(tmp_year == year && tmp_month == month && tmp_day == day) {
+                    printf("%d년 %d월 %d일에 일정이 있습니다.\n", year, month, day);
+                    schedule_Clear();
+                    tmp_Clear();
+                    printf("일정이 삭제되었습니다.\n");
+                } else if(tmp_year != year || tmp_month != month || tmp_day != day) {
+                    printf("%d년 %d월 %d일에 일정이 없습니다.\n", year, month, day);
+                }
+                pause();
+                break;
+                
+                // 일정 보기
             case 3: Terminal_Clear();
-                    if(year == 0 || month == 0 || day == 0) {
-                        printf("일정이 등록되어있지 않습니다.\n");
-                    } else {
-                        View_Schedule(year, month, day, txt_contents);
-                    }
-                    pause();
-                    break;
-                   
-            // 지정된 값 외의 값을 입력하면 에러처리
+                if(year == 0 || month == 0 || day == 0) {
+                    printf("일정이 등록되어있지 않습니다.\n");
+                } else {
+                    View_Schedule(year, month, day, txt_contents);
+                }
+                pause();
+                break;
+                
+                // 지정된 값 외의 값을 입력하면 에러처리
             default: printf("잘못 입력하셨습니다. 다시 입력해주세요.\n");
-                     pause();
-                     break;
+                pause();
+                break;
         }
     }
 }
 
 
 void View_Schedule(int year, int month, int day, char* txt_contents){
-   
+    
     int month_array[12] = {31,28,31,30,31,30,31,31,30,31,30,31};
     int total_day=0, total_1, total_2, i, j, dal, cycle=0, count=1, total_count=1, blank_count=0, space_count=0, blank_check;
     
@@ -217,14 +217,14 @@ void View_Schedule(int year, int month, int day, char* txt_contents){
         }
         total_2 += month_array[i];
     }
- 
+    
     total_day = total_1 + total_2; // 총일수
     printf("\n");
     printf("             %d년 %d월\n", year, month);
     printf("---------------------------------------\n");
     printf("   SUN  MON  TUE  WED  THU  FRI  SAT\n");
     printf("---------------------------------------\n");
- 
+    
     // 공백 추가
     for(i = 1; i <= ((total_day % 7) % 7); i++) {
         printf("     ");
@@ -247,15 +247,15 @@ void View_Schedule(int year, int month, int day, char* txt_contents){
             blank_count = count;
         }
         /**
-            DebugCode (프로젝트 감점 방지용)
-        **/
+         DebugCode (프로젝트 감점 방지용)
+         **/
         //printf(" count = %d, blank_count = %d, cycle = %d, total_count/7 = %d\n", count, blank_count, cycle, total_count/7);
         // 일~토까지 추가가 완료되었을 경우 개행
         if((i +(total_day % 7)) % 7 == 0) {
             // 개행된 횟수가 일정추가된 날짜/7 의 몫과 같을때 개행 후 일정 출력
             // ***********************문제부분
             if(cycle == ((day+blank_check)/7)){
-            //if(total_count/7 == cycle || total_count-space_count == day ||cycle == (day/7)) {
+                //if(total_count/7 == cycle || total_count-space_count == day ||cycle == (day/7)) {
                 // 일정 추가할 줄을 생성
                 printf("\n");
                 // 공백 추가
@@ -264,7 +264,7 @@ void View_Schedule(int year, int month, int day, char* txt_contents){
                 }
                 // 일정 출력
                 printf("%5s\n", txt_contents);
-            } else {            
+            } else {
                 // 개행
                 printf("\n\n");
             }
@@ -287,7 +287,7 @@ void Judgement_Leap(int year, int month, int day){
         if((day<1)||(day>29)) {
             printf("잘못된 일 입력\n1일에서 29일 사이로 입력하세요\n\n");
         }
-    // 윤달이 아닐경우 2월의 에러처리 
+        // 윤달이 아닐경우 2월의 에러처리
     } else if(month==2) {
         if((day<1)||(day>28)) {
             printf("잘못된 일 입력\n1일에서 28일 사이로 입력하세요\n\n");
@@ -296,7 +296,7 @@ void Judgement_Leap(int year, int month, int day){
         if((day<1)||(day>31)) {
             printf("잘못된 일 입력\n1일에서 31일 사이로 입력하세요\n\n");
         }
-    // 나머지 월은 30일 처리
+        // 나머지 월은 30일 처리
     } else {
         if((day<1)||(day>30)) {
             printf("잘못된 일 입력\n1일에서 30일 사이로 입력하세요\n\n");
@@ -320,8 +320,8 @@ void Terminal_Clear(){
 }
 
 void pause() {
-  printf("\nPress any key to continue . . .");
-  // 아무 키나 1개 입력 받기
-  getchar();
-  getchar();
+    printf("\nPress any key to continue . . .");
+    // 아무 키나 1개 입력 받기
+    getchar();
+    getchar();
 }
