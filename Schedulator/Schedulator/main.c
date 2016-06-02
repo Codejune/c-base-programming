@@ -797,7 +797,7 @@ void ScheduleManagement(void) {
                 } else if (len > 16) {
                     printf("너무 많은 내용을 입력하셨습니다\n\n");
                     ClearSchedule(date, content, i);
-                } else {
+                } else if (date[0][i] == date[0][j] && date[1][i] == date[1][j] && date[2][i] == date[2][j]){
                     printf("출력 : %d %d %d %s\n", date[0][i], date[1][i], date[2][i], content[i]);
                     for(j = 0; j < i; j++){
                         if(date[0][i] == date[0][j] && date[1][i] == date[1][j] && date[2][i] == date[2][j]){
@@ -845,12 +845,10 @@ void ScheduleManagement(void) {
                             }
                         }
                     }
-                }
-                
-                if(date[0][i] != 0 && date[1][i] != 0 && date[2][i] != 0){
+                } else {
+                    printf("출력 : %d %d %d %s\n", date[0][i], date[1][i], date[2][i], content[i]);
                     printf("일정을 추가하였습니다.\n");
                 }
-                
                 
                 // Bubbble Sort Schedule
                 if(i != 0){
