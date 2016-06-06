@@ -2,6 +2,7 @@
  *   School     : Soongsil University               *
  *   Major      : Computer Science                  *
  *   Subject    : Progeamming1 & Practice           *
+ *   Prof       : Mun Young Song                    *
  *   Student ID : 20162448                          *
  *   Author     : Kim Byoung June                   *
  *   Date       : 2016. 06. 09 (thr)                *
@@ -21,17 +22,20 @@
  *                  Define Variables                *
  ****************************************************/
 
-# define TRUE 1
-# define FALSE 0
+# define TRUE   1
+# define FALSE  0
 
 /****************************************************
  *                  Global Variables                *
  ****************************************************/
 
-int top = -1;
-double Variable[26];
-char Stack[1000] = {0};
-char CalStack[BUFSIZ][1000] = {0};
+int top = -1;                       // Remove Null Value
+
+double Variable[26];                // Variable Value
+
+char Stack[1000] = {0};             // Operand Stack
+
+char CalStack[BUFSIZ][1000] = {0};  // Operator Stack
 
 
 /****************************************************
@@ -55,30 +59,30 @@ void ScientificCalculate(void);         // Main Function of Scientific Calculato
 
 void RemoveSpace(char []);              // Remove Space
 
-bool Input(char []);                    // Input 문자열 정리하는 함수
+bool Input(char []);                    // Organize Input String
 
-void Transformation(char []);           // math 함수나 문자 상수 처리하는 함수
+void Transformation(char []);           // Dipose of Math Function or Character Variable
 
-void Postfix(char []);                  // 후위연산 기법으로 문자열 처리하는 함수
+void Postfix(char []);                  // Organize Input to Postfix Formular
 
-int OperatorCmp(char, char);            // 연산자 우선순위 판단
+int OperatorCmp(char, char);            // Judgement Operator Precedence
 
-int OperatorReturn(char);               // 연산자 리턴값 설정
+int OperatorReturn(char);               // Define Operator Return Value
 
-double Result(char []);                 // 계산
+double Result(char []);                 // Calculate
 
-double CalReturn(char, double, double); // 계산 결과 리턴
+double CalReturn(char, double, double); // Return Calculate Result
 
 
 /****************************************************
  *            Schedule Management Function          *
  ****************************************************/
 
-void ScheduleManagement(void);
+void ScheduleManagement(void);                          // Main Function of Schedule Management
 
-void ViewSchedule(int (*)[100], char (*)[100], int);
+void ViewSchedule(int (*)[100], char (*)[100], int);    // View Schedule on Calendar
 
-void ClearSchedule(int (*)[100], char (*)[100], int);
+void ClearSchedule(int (*)[100], char (*)[100], int);   // Reset Schedule
 
 
 /****************************************************
@@ -141,7 +145,8 @@ char Spop(void)
     if(IsEmpty())
     {
         printf("Stack is Empty!\n");
-        exit(-1); // 비정상적인 종료를 알림
+        // Alram Abnormal Termination
+        exit(-1);
     }
     char re = Stack[top];
     Stack[top] = '\0';
@@ -183,6 +188,7 @@ void ScientificCalculate(void){
         while(1){
             printf("Input : ");
             fgets(input,1000,stdin);
+            
             // Remove Enter Buffer
             input[strlen(input)-1] = '\0';
             
@@ -345,6 +351,7 @@ void Transformation(char input[]) {
                     len++;
                     j--;
                 }
+                
                 // Save Start Number Index(position)
                 k = j+1;
                 for(m = j+1; m < i; m++) {
@@ -401,8 +408,7 @@ void Transformation(char input[]) {
                 k = i;
                 result = sqrt(atof(temp));
                 gcvt(result, 10, temp);
-            }
-            else if(input[i] == 'l' && input[i+1] == 'o' && input[i+2] == 'g') {
+            } else if(input[i] == 'l' && input[i+1] == 'o' && input[i+2] == 'g') {
                 if(!(input[i+3] >= 48 && input[i+3] <= 57)) {
                     SyntaxError();
                     return;
@@ -426,7 +432,6 @@ void Transformation(char input[]) {
                 result = log10(atof(temp));
                 gcvt(result, 10, temp);
                 
-                // sin cos tan 결과값 에러 !
             } else if((input[i] == 's' && input[i+1] == 'i' && input[i+2] == 'n') || (input[i] == 'c' && input[i+1] == 'o' && input[i+2] == 's') || (input[i] == 't' && input[i+1] == 'a' && input[i+2] == 'n')) {
                 if(!(input[i+3] >= 48 && input[i+3] <= 57)) {
                     temp[0] = '4';
@@ -505,7 +510,7 @@ void Transformation(char input[]) {
  *                      Postfix                     *
  ****************************************************/
 
-void Postfix(char input[]) {// 후위연산 기법으로 문자열 처리하는 함수
+void Postfix(char input[]) {
     
     int i=0, j=0, width=0, height=0;
     int m;
@@ -513,7 +518,7 @@ void Postfix(char input[]) {// 후위연산 기법으로 문자열 처리하는 
     while(input[i] != '\0') {
         if((input[i] >= 48 && input[i] <= 57) || input[i] == '.' || input[i] == '*' || input[i] == '/' || input[i] == '+' || input[i] == '-' || input[i] == '(' || input[i] == ')') {
             i++;
-        } else { // 예외 처리
+        } else {
             printf("Syntax Error!\n");
             return;
         }
@@ -521,17 +526,20 @@ void Postfix(char input[]) {// 후위연산 기법으로 문자열 처리하는 
     
     i = 0;
     
-    if(input[1] >= 48 && input[1] <= 57 && input[0] == '-') { // 단항 연산자 - 처리1
+    // Unary Operator - Dispose 1
+    if(input[1] >= 48 && input[1] <= 57 && input[0] == '-') {
         CalStack[0][width++] = input[i++];
     }
     
+    // Unary Operator - Dispose 2
     while(input[i] != '\0') {
-        if(input[i] == '(' && input[i+1] == '-') { // 단항 연산지 - 처리2
+        if(input[i] == '(' && input[i+1] == '-') {
             
             width = 0;
             CalStack[height][width++] = input[i+1];
             
-            for(j = i+1; j < strlen(input); j++) { // 단항 연산자 - 제거용
+            // Unary Operator - Remove
+            for(j = i+1; j < strlen(input); j++) {
                 input[j] = input[j+1];
             }
         }
@@ -623,8 +631,7 @@ void Postfix(char input[]) {// 후위연산 기법으로 문자열 처리하는 
 /****************************************************
  *                     OperatorCmp                  *
  ****************************************************/
-int OperatorCmp(char op1,char op2) // 연산자 우선순위 판단
-{
+int OperatorCmp(char op1,char op2) {
     if(OperatorReturn(op1) > OperatorReturn(op2)) {
         return 1;
     } else if(OperatorReturn(op1) < OperatorReturn(op2)) {
@@ -638,10 +645,8 @@ int OperatorCmp(char op1,char op2) // 연산자 우선순위 판단
 /****************************************************
  *                  OperatorReturn                  *
  ****************************************************/
-int OperatorReturn(char op) // 연산자 리턴값 설정
-{
-    switch(op)
-    {
+int OperatorReturn(char op) {
+    switch(op) {
         case '*':
         case '/':
             return 5;
@@ -660,10 +665,8 @@ int OperatorReturn(char op) // 연산자 리턴값 설정
 /****************************************************
  *                      CalReturn                   *
  ****************************************************/
-double CalReturn(char op,double num1,double num2) // 계산 결과 리턴
-{
-    switch(op)
-    {
+double CalReturn(char op,double num1,double num2) {
+    switch(op) {
         case '*':
             return num1 * num2;
         case '/':
@@ -682,30 +685,26 @@ double CalReturn(char op,double num1,double num2) // 계산 결과 리턴
 /****************************************************
  *                      Result                      *
  ****************************************************/
-double Result(char input[])
-{
+double Result(char input[]) {
     int i = 0,j,k;
     int cnt = 0,num = 0;
     double result;
     
-    while(CalStack[i][0] != '\0')
-    {
-        if(CalStack[i][0] == '*' || CalStack[i][0] == '/' || CalStack[i][0] == '+' || CalStack[i][0] == '-')
-        {
-            if(CalStack[i][0] == '-' && CalStack[i][1] >= 48 && CalStack[i][1] <= 57)
+    while(CalStack[i][0] != '\0') {
+        if(CalStack[i][0] == '*' || CalStack[i][0] == '/' || CalStack[i][0] == '+' || CalStack[i][0] == '-') {
+            if(CalStack[i][0] == '-' && CalStack[i][1] >= 48 && CalStack[i][1] <= 57) {
                 num++;
-            else
+            } else {
                 cnt++;
-        }
-        else if(CalStack[i][0] >= 48 && CalStack[i][0] <= 57)
+            }
+        } else if(CalStack[i][0] >= 48 && CalStack[i][0] <= 57) {
             num++;
+        }
         i++;
     }
-    if(num != cnt + 1)
-    {
+    if(num != cnt + 1) {
         system("clear");
         printf("Syntax Error!\n");
-        //return;
     }
     i = 0;
     while(cnt != 0) {
@@ -880,31 +879,87 @@ void ScheduleManagement(void) {
                             }
                             
                             // Sort Month
-                            if(date[1][k] > date[1][k+1]){
-                                int tmp_year, tmp_month, tmp_day;
-                                char tmp_content[100] = {0};
-                                
-                                tmp_year = date[0][k];
-                                tmp_month = date[1][k];
-                                tmp_day = date[2][k];
-                                strcpy(tmp_content, content[k]);
-                                date[0][k] = date[0][k+1];
-                                date[1][k] = date[1][k+1];
-                                date[2][k] = date[2][k+1];
-                                for(l = 0; l <= strlen(content[k+1]); l++){
-                                    content[k][l] = content[k+1][l];
-                                }
-                                
-                                date[0][k+1] = tmp_year;
-                                date[1][k+1] = tmp_month;
-                                date[2][k+1] = tmp_day;
-                                for(l = 0; l <= strlen(content[k+1]); l++){
-                                    content[k+1][l] = tmp_content[l];
+                            if(date[0][k] <= date[0][k+1]){
+                                if(date[1][k] > date[1][k+1]){
+                                    int tmp_year, tmp_month, tmp_day;
+                                    char tmp_content[100] = {0};
+                                    
+                                    tmp_year = date[0][k];
+                                    tmp_month = date[1][k];
+                                    tmp_day = date[2][k];
+                                    strcpy(tmp_content, content[k]);
+                                    date[0][k] = date[0][k+1];
+                                    date[1][k] = date[1][k+1];
+                                    date[2][k] = date[2][k+1];
+                                    for(l = 0; l <= strlen(content[k+1]); l++){
+                                        content[k][l] = content[k+1][l];
+                                    }
+                                    
+                                    date[0][k+1] = tmp_year;
+                                    date[1][k+1] = tmp_month;
+                                    date[2][k+1] = tmp_day;
+                                    for(l = 0; l <= strlen(content[k+1]); l++){
+                                        content[k+1][l] = tmp_content[l];
+                                    }
                                 }
                             }
                             
                             // Sort Day
-                            if(date[2][k] > date[2][k+1]){
+                            if(date[0][k] <= date[0][k+1]){
+                                if(date[1][k] <= date[1][k+1]){
+                                    if(date[2][k] > date[2][k+1]){
+                                        int tmp_year, tmp_month, tmp_day;
+                                        char tmp_content[100] = {0};
+                                        
+                                        tmp_year = date[0][k];
+                                        tmp_month = date[1][k];
+                                        tmp_day = date[2][k];
+                                        strcpy(tmp_content, content[k]);
+                                        date[0][k] = date[0][k+1];
+                                        date[1][k] = date[1][k+1];
+                                        date[2][k] = date[2][k+1];
+                                        for(l = 0; l <= strlen(content[k+1]); l++){
+                                            content[k][l] = content[k+1][l];
+                                        }
+                                        
+                                        date[0][k+1] = tmp_year;
+                                        date[1][k+1] = tmp_month;
+                                        date[2][k+1] = tmp_day;
+                                        for(l = 0; l <= strlen(content[k+1]); l++){
+                                            content[k+1][l] = tmp_content[l];
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            // Sort Month
+                            if(date[0][k] <= date[0][k+1]){
+                                if(date[1][k] > date[1][k+1]){
+                                    int tmp_year, tmp_month, tmp_day;
+                                    char tmp_content[100] = {0};
+                                    
+                                    tmp_year = date[0][k];
+                                    tmp_month = date[1][k];
+                                    tmp_day = date[2][k];
+                                    strcpy(tmp_content, content[k]);
+                                    date[0][k] = date[0][k+1];
+                                    date[1][k] = date[1][k+1];
+                                    date[2][k] = date[2][k+1];
+                                    for(l = 0; l <= strlen(content[k+1]); l++){
+                                        content[k][l] = content[k+1][l];
+                                    }
+                                    
+                                    date[0][k+1] = tmp_year;
+                                    date[1][k+1] = tmp_month;
+                                    date[2][k+1] = tmp_day;
+                                    for(l = 0; l <= strlen(content[k+1]); l++){
+                                        content[k+1][l] = tmp_content[l];
+                                    }
+                                }
+                            }
+                            
+                            // Sort Year
+                            if(date[0][k] > date[0][k+1]){
                                 int tmp_year, tmp_month, tmp_day;
                                 char tmp_content[100] = {0};
                                 
@@ -931,6 +986,7 @@ void ScheduleManagement(void) {
                 }
                 
                 i++;
+                
                 Pause();
                 break;
                 
@@ -1048,33 +1104,29 @@ void ViewSchedule(int (*date)[100], char (*content)[100], int cnt){
             blank_check = 0;
             total_day = 0;
             
-            // 모든 년도 계산
+            // Calculate All of Year
             for(j = 0; j<date[0][i] - 1; j++) {
-                // 윤년 판별
+                // Judge Leap Year
                 if((((j + 1) % 4) == 0 && (((j + 1) % 100) != 0)) || (((j + 1) % 400) == 0)) {
-                    //맞으면 365일
                     dal = 366;
                 } else {
-                    // 아니라면 365일
                     dal = 365;
                 }
                 total_1 += dal;
             }
             
-            // 모든 달 계산
+            // Calculate All of Month
             for(j = 0; j < date[1][i]-1; j++) {
-                // 윤달 판별
+                // Judge Leap Month
                 if(((date[0][i] % 4) == 0 && ((date[0][i] % 100) != 0)) || ((date[0][i] % 400) == 0)) {
-                    // 맞으면 29일
                     month_array[1] = 29;
                 } else {
-                    // 아니라면 28일
                     month_array[1] = 28;
                 }
                 total_2 += month_array[j];
             }
             
-            total_day = total_1 + total_2; // 총일수
+            total_day = total_1 + total_2;
             
             printf("\n");
             printf("             %d년 %d월\n", date[0][i], date[1][i]);
@@ -1083,35 +1135,29 @@ void ViewSchedule(int (*date)[100], char (*content)[100], int cnt){
             printf("---------------------------------------\n");
             
             count = 1;
-            // 공백 추가
+            // Add Start Space
             for(j = 1; j <= ((total_day % 7) % 7); j++) {
                 printf("     ");
-                // 날짜 추가 횟수 +1
                 count++;
                 total_count++;
                 space_count++;
-                // 빈칸 확인
                 blank_check = j-1;
                 
             }
             
             
-            // 날짜 추가
+            // Add Day
             for(j = 1; j <= month_array[date[1][i]-1]; j++) {
-                // 날짜 출력
                 printf("%5d",j);
-                // 일정 위치 조정
+                
                 if(date[2][i]==total_count-space_count){
-                    // 빈 공간 횟수를 날짜추가 횟수로 계산
                     blank_count = count;
                 }
-                // 일~토까지 추가가 완료되었을 경우 개행
+                
                 if((j +(total_day % 7)) % 7 == 0) {
-                    // 개행된 횟수가 일정추가된 날짜/7 의 몫과 같을때 개행 후 일정 출력
                     if(cycle == ((date[2][i]+blank_check)/7)){
-                        // 일정 추가할 줄을 생성
                         printf("\n");
-                        // 공백 추가
+                        // Add Space
                         for(k = 1; k < blank_count; k++){
                             printf("     ");
                         }
@@ -1126,20 +1172,15 @@ void ViewSchedule(int (*date)[100], char (*content)[100], int cnt){
                             }
                         }
                         printf("\n");
-                        // 일정 출력
-                        //printf("%s\n", content[i]);
+                        
                     } else {
-                        // 개행
                         printf("\n\n");
                     }
-                    // 개행 횟수 +1
                     cycle++;
-                    // 날짜 추가 횟수 초기화
+                    // Reset Add Day Count
                     count = 0;
                 }
-                // 날짜 추가 횟수 +1
                 count++;
-                // 모든 추가 횟수 +1
                 total_count++;
             }
             printf("\n");
