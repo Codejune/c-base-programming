@@ -783,14 +783,47 @@ void ScheduleManagement(void) {
             case 1:
                 printf("입력 : ");
                 scanf("%d %d %d %s", &date[0][i], &date[1][i], &date[2][i], content[i]);
+                
+                // Check Leap
+                if((date[1][i]==2)&&((date[0][i]%4)&&(date[0][i]%400)&&!(date[0][i]%100))==0) {
+                    if((date[2][i]<1)||(date[2][i]>29)) {
+                        printf("잘못된 일을 입력하였습니다. 1일에서 29일 사이로 입력하세요\n\n");
+                        ClearSchedule(date, content, i);
+                        Pause();
+                        break;
+                    }
+                } else if(date[1][i]==2) {
+                    if((date[2][i]<1)||(date[2][i]>28)) {
+                        printf("잘못된 일을 입력하였습니다. 1일에서 28일 사이로 입력하세요\n\n");
+                        ClearSchedule(date, content, i);
+                        Pause();
+                        break;
+                    }
+                } else if((date[1][i]==1)||(date[1][i]==3)||(date[1][i]==5)||(date[1][i]==7)||(date[1][i]==8)||(date[1][i]==10)||(date[1][i]==12)) {
+                    if((date[2][i]<1)||(date[2][i]>31)) {
+                        printf("잘못된 일을 입력하였습니다. 1일에서 31일 사이로 입력하세요\n\n");
+                        ClearSchedule(date, content, i);
+                        Pause();
+                        break;
+                    }
+                } else {
+                    if((date[2][i]<1)||(date[2][i]>30)) {
+                        printf("잘못된 일을 입력하였습니다. 1일에서 30일 사이로 입력하세요\n\n");
+                        ClearSchedule(date, content, i);
+                        Pause();
+                        break;
+                    }
+                }
+                
                 len = strlen(content[i]);
+                
                 if((date[0][i] <= 0)) {
                     printf("잘못된 년도를 입력하였습니다. 다시 입력하세요.\n\n");
                     ClearSchedule(date, content, i);
                 } else if(date[1][i] < 1 || date[1][i] > 12) {
                     printf("잘못된 월을 입력하였습니다. 1월에서 12월 사이로 다시 입력하세요.\n\n");
                     ClearSchedule(date, content, i);
-                } else if(date[2][i] <= 0) {
+                } else if(date[2][i] <= 0 || date[2][i] >= 32) {
                     printf("잘못된 일을 입력하였습니다. 다시 입력하세요.\n\n");
                     ClearSchedule(date, content, i);
                 } else if (len > 16) {
@@ -1182,6 +1215,29 @@ void ViewSchedule(int (*date)[100], char (*content)[100], int cnt){
                 }
                 count++;
                 total_count++;
+            }
+            
+            // Last Line Content Check
+            if(cycle == ((date[2][i]+blank_check)/7)){
+                printf("\n");
+                // Add Space
+                for(k = 1; k < blank_count; k++){
+                    printf("     ");
+                }
+                for(k = 0; k < strlen(content[i]); k++){
+                    if(content[i][k] == '.'){
+                        printf("\n");
+                        for(l = 1; l < blank_count; l++){
+                            printf("     ");
+                        }
+                    } else {
+                        printf("%c", content[i][k]);
+                    }
+                }
+                printf("\n");
+                
+            } else {
+                printf("\n\n");
             }
             printf("\n");
             printf("아무 키나 입력하세요...");
