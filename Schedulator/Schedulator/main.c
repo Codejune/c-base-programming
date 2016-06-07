@@ -18,12 +18,6 @@
 #include <stdbool.h>
 #include <math.h>
 
-/****************************************************
- *                  Define Variables                *
- ****************************************************/
-
-# define TRUE   1
-# define FALSE  0
 
 /****************************************************
  *                  Global Variables                *
@@ -904,54 +898,41 @@ void ScheduleManagement(void) {
                 Pause();
                 break;
                 
-                // Delete Schedule
+            // Delete Schedule
             case 2:
                 printf("입력 : ");
                 scanf("%d %d %d %s", &tmp_year, &tmp_month, &tmp_day, tmp_content);
-                int equality_date = FALSE;
+                int equality_date = false;
                 for(j=0; j<100; j++){
                     if(date[0][j] == tmp_year && date[1][j] == tmp_month && date[2][j] == tmp_day){
                         
-                        int equality_content = FALSE;
+                        int equality_content = false;
                         for(k=0; k<=strlen(content[j]); k++){
                             if(content[j][k] == tmp_content[k]){
-                                equality_content = TRUE;
+                                equality_content = true;
                             } else {
-                                equality_content = FALSE;
+                                equality_content = true;
                                 break;
                             }
                         }
                         
-                        if(equality_content == TRUE){
-                            
+                        if(equality_content == true){
+                            printf("%d년 %d월 %d일에 일정을 삭제하였습니다.\n", tmp_year, tmp_month, tmp_day);
                             ClearSchedule(date, content, j);
-                            equality_date = TRUE;
+                            equality_date = true;
                             
                         } else {
-                            equality_date = FALSE;
-                            // Remove Junk Schedule
-                            /*
-                             for(k=0; k<100; k++){
-                             if(date[0][k] == 0){
-                             date[0][k] = date[0][k+1];
-                             }
-                             if(date[1][k] == 0){
-                             date[1][k] = date[1][k+1];
-                             }
-                             if(date[2][k] == 0){
-                             date[2][k] = date[2][k+1];
-                             }
-                             }
-                             */
+                            equality_date = false;
                         }
                     }
                 }
-                if(equality_date == FALSE){
+                if(equality_date == false){
                     printf("%d년 %d월 %d일에 일정이 없습니다.\n", tmp_year, tmp_month, tmp_day);
                 }
                 Pause();
                 break;
                 
+            // View Schedule
             case 3:
                 getchar();
                 if(date[0][i-1] != 0 && date[1][i-1] != 0 && date[2][i-1] != 0){
@@ -963,7 +944,7 @@ void ScheduleManagement(void) {
                 break;
                 
                 
-                // Exit Function
+            // Exit Function
             case 4:
                 getchar();
                 return;
@@ -982,6 +963,7 @@ void ScheduleManagement(void) {
  ****************************************************/
 
 void ClearSchedule(int (*date)[100], char (*content)[100], int i){
+    
     int j = 0;
     
     date[0][i] = 0;
@@ -991,6 +973,8 @@ void ClearSchedule(int (*date)[100], char (*content)[100], int i){
         content[i][j] = '\0';
     }
 }
+
+
 /****************************************************
  *                    ViewSchedule                  *
  ****************************************************/
@@ -1275,7 +1259,7 @@ void SortSchedule(int (*date)[100], char (*content)[100], int i){
 }
 
 /****************************************************
- *                  Terminal_Clear                  *
+ *                  TerminalClear                  *
  ****************************************************/
 
 void TerminalClear(void){
