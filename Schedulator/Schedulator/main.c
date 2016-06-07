@@ -80,6 +80,8 @@ double CalReturn(char, double, double); // Return Calculate Result
 
 void ScheduleManagement(void);                          // Main Function of Schedule Management
 
+void SortSchedule(int (*)[100], char (*)[100], int);    // Ascending Sort Schedule
+
 void ViewSchedule(int (*)[100], char (*)[100], int);    // View Schedule on Calendar
 
 void ClearSchedule(int (*)[100], char (*)[100], int);   // Reset Schedule
@@ -763,7 +765,7 @@ void ScheduleManagement(void) {
      ***/
     char content[100][100] = {0};
     char tmp_content[100] = {0};
-    int select_function = 1, i = 0, j = 0, k = 0, l = 0;
+    int select_function = 1, i = 0, j = 0, k = 0;
     int tmp_year, tmp_month, tmp_day;
     unsigned long int len = 0;
     char select_answer;
@@ -783,40 +785,48 @@ void ScheduleManagement(void) {
             case 1:
                 printf("입력 : ");
                 scanf("%d %d %d %s", &date[0][i], &date[1][i], &date[2][i], content[i]);
+                printf("출력 : %d %d %d %s\n", date[0][i], date[1][i], date[2][i], content[i]);
                 
                 // Check Leap
-                if((date[1][i]==2)&&((date[0][i]%4)&&(date[0][i]%400)&&!(date[0][i]%100))==0) {
+                if((date[1][i]==2 && (date[0][i] % 4 == 0 && date[0][i] % 100 != 0)) || date[0][i] % 400 == 0) {
                     if((date[2][i]<1)||(date[2][i]>29)) {
                         printf("잘못된 일을 입력하였습니다. 1일에서 29일 사이로 입력하세요\n\n");
                         ClearSchedule(date, content, i);
+                        SortSchedule(date, content, i);
+                        i++;
                         Pause();
                         break;
                     }
-                } else if(date[1][i]==2) {
-                    if((date[2][i]<1)||(date[2][i]>28)) {
+                } else if(date[1][i] == 2) {
+                    if(date[2][i] < 1 || date[2][i] > 28) {
                         printf("잘못된 일을 입력하였습니다. 1일에서 28일 사이로 입력하세요\n\n");
                         ClearSchedule(date, content, i);
+                        SortSchedule(date, content, i);
+                        i++;
                         Pause();
                         break;
                     }
-                } else if((date[1][i]==1)||(date[1][i]==3)||(date[1][i]==5)||(date[1][i]==7)||(date[1][i]==8)||(date[1][i]==10)||(date[1][i]==12)) {
-                    if((date[2][i]<1)||(date[2][i]>31)) {
+                } else if(date[1][i] ==1 || date[1][i] == 3 || date[1][i] == 5 || date[1][i] == 7 || date[1][i] == 8 || date[1][i] == 10 || date[1][i] == 12) {
+                    if(date[2][i] < 1 || date[2][i] > 31) {
                         printf("잘못된 일을 입력하였습니다. 1일에서 31일 사이로 입력하세요\n\n");
                         ClearSchedule(date, content, i);
+                        SortSchedule(date, content, i);
+                        i++;
                         Pause();
                         break;
                     }
                 } else {
-                    if((date[2][i]<1)||(date[2][i]>30)) {
+                    if(date[2][i] < 1 || date[2][i] > 30) {
                         printf("잘못된 일을 입력하였습니다. 1일에서 30일 사이로 입력하세요\n\n");
                         ClearSchedule(date, content, i);
+                        SortSchedule(date, content, i);
+                        i++;
                         Pause();
                         break;
                     }
                 }
                 
                 len = strlen(content[i]);
-                
                 if((date[0][i] <= 0)) {
                     printf("잘못된 년도를 입력하였습니다. 다시 입력하세요.\n\n");
                     ClearSchedule(date, content, i);
@@ -829,8 +839,10 @@ void ScheduleManagement(void) {
                 } else if (len > 16) {
                     printf("너무 많은 내용을 입력하셨습니다\n\n");
                     ClearSchedule(date, content, i);
-                } else if (date[0][i] == date[0][j] && date[1][i] == date[1][j] && date[2][i] == date[2][j]){
-                    printf("출력 : %d %d %d %s\n", date[0][i], date[1][i], date[2][i], content[i]);
+                } else {
+                    if(i==0){
+                        printf("일정을 추가하였습니다.\n");
+                    }
                     for(j = 0; j < i; j++){
                         if(date[0][i] == date[0][j] && date[1][i] == date[1][j] && date[2][i] == date[2][j]){
                             while(1){
@@ -875,148 +887,17 @@ void ScheduleManagement(void) {
                                 }
                                 break;
                             }
+                            break;
+                        } else {
+                            if(j == i-1){
+                                printf("일정을 추가하였습니다.\n");
+                                break;
+                            }
                         }
                     }
-                } else {
-                    printf("출력 : %d %d %d %s\n", date[0][i], date[1][i], date[2][i], content[i]);
-                    printf("일정을 추가하였습니다.\n");
                 }
                 
-                // Bubbble Sort Schedule
-                if(i != 0){
-                    for(j = 0; j < i; j++){
-                        for(k=0; k < i-j; k++){
-                            
-                            // Sort Year
-                            if(date[0][k] > date[0][k+1]){
-                                int tmp_year, tmp_month, tmp_day;
-                                char tmp_content[100] = {0};
-                                
-                                tmp_year = date[0][k];
-                                tmp_month = date[1][k];
-                                tmp_day = date[2][k];
-                                strcpy(tmp_content, content[k]);
-                                date[0][k] = date[0][k+1];
-                                date[1][k] = date[1][k+1];
-                                date[2][k] = date[2][k+1];
-                                for(l = 0; l <= strlen(content[k+1]); l++){
-                                    content[k][l] = content[k+1][l];
-                                }
-                                
-                                date[0][k+1] = tmp_year;
-                                date[1][k+1] = tmp_month;
-                                date[2][k+1] = tmp_day;
-                                for(l = 0; l <= strlen(content[k+1]); l++){
-                                    content[k+1][l] = tmp_content[l];
-                                }
-                            }
-                            
-                            // Sort Month
-                            if(date[0][k] <= date[0][k+1]){
-                                if(date[1][k] > date[1][k+1]){
-                                    int tmp_year, tmp_month, tmp_day;
-                                    char tmp_content[100] = {0};
-                                    
-                                    tmp_year = date[0][k];
-                                    tmp_month = date[1][k];
-                                    tmp_day = date[2][k];
-                                    strcpy(tmp_content, content[k]);
-                                    date[0][k] = date[0][k+1];
-                                    date[1][k] = date[1][k+1];
-                                    date[2][k] = date[2][k+1];
-                                    for(l = 0; l <= strlen(content[k+1]); l++){
-                                        content[k][l] = content[k+1][l];
-                                    }
-                                    
-                                    date[0][k+1] = tmp_year;
-                                    date[1][k+1] = tmp_month;
-                                    date[2][k+1] = tmp_day;
-                                    for(l = 0; l <= strlen(content[k+1]); l++){
-                                        content[k+1][l] = tmp_content[l];
-                                    }
-                                }
-                            }
-                            
-                            // Sort Day
-                            if(date[0][k] <= date[0][k+1]){
-                                if(date[1][k] <= date[1][k+1]){
-                                    if(date[2][k] > date[2][k+1]){
-                                        int tmp_year, tmp_month, tmp_day;
-                                        char tmp_content[100] = {0};
-                                        
-                                        tmp_year = date[0][k];
-                                        tmp_month = date[1][k];
-                                        tmp_day = date[2][k];
-                                        strcpy(tmp_content, content[k]);
-                                        date[0][k] = date[0][k+1];
-                                        date[1][k] = date[1][k+1];
-                                        date[2][k] = date[2][k+1];
-                                        for(l = 0; l <= strlen(content[k+1]); l++){
-                                            content[k][l] = content[k+1][l];
-                                        }
-                                        
-                                        date[0][k+1] = tmp_year;
-                                        date[1][k+1] = tmp_month;
-                                        date[2][k+1] = tmp_day;
-                                        for(l = 0; l <= strlen(content[k+1]); l++){
-                                            content[k+1][l] = tmp_content[l];
-                                        }
-                                    }
-                                }
-                            }
-                            
-                            // Sort Month
-                            if(date[0][k] <= date[0][k+1]){
-                                if(date[1][k] > date[1][k+1]){
-                                    int tmp_year, tmp_month, tmp_day;
-                                    char tmp_content[100] = {0};
-                                    
-                                    tmp_year = date[0][k];
-                                    tmp_month = date[1][k];
-                                    tmp_day = date[2][k];
-                                    strcpy(tmp_content, content[k]);
-                                    date[0][k] = date[0][k+1];
-                                    date[1][k] = date[1][k+1];
-                                    date[2][k] = date[2][k+1];
-                                    for(l = 0; l <= strlen(content[k+1]); l++){
-                                        content[k][l] = content[k+1][l];
-                                    }
-                                    
-                                    date[0][k+1] = tmp_year;
-                                    date[1][k+1] = tmp_month;
-                                    date[2][k+1] = tmp_day;
-                                    for(l = 0; l <= strlen(content[k+1]); l++){
-                                        content[k+1][l] = tmp_content[l];
-                                    }
-                                }
-                            }
-                            
-                            // Sort Year
-                            if(date[0][k] > date[0][k+1]){
-                                int tmp_year, tmp_month, tmp_day;
-                                char tmp_content[100] = {0};
-                                
-                                tmp_year = date[0][k];
-                                tmp_month = date[1][k];
-                                tmp_day = date[2][k];
-                                strcpy(tmp_content, content[k]);
-                                date[0][k] = date[0][k+1];
-                                date[1][k] = date[1][k+1];
-                                date[2][k] = date[2][k+1];
-                                for(l = 0; l <= strlen(content[k+1]); l++){
-                                    content[k][l] = content[k+1][l];
-                                }
-                                
-                                date[0][k+1] = tmp_year;
-                                date[1][k+1] = tmp_month;
-                                date[2][k+1] = tmp_day;
-                                for(l = 0; l <= strlen(content[k+1]); l++){
-                                    content[k+1][l] = tmp_content[l];
-                                }
-                            }
-                        }
-                    }
-                }
+                SortSchedule(date, content, i);
                 
                 i++;
                 
@@ -1249,6 +1130,149 @@ void ViewSchedule(int (*date)[100], char (*content)[100], int cnt){
     getchar();
 }
 
+
+/****************************************************
+ *                  SortSchedule                  *
+ ****************************************************/
+
+void SortSchedule(int (*date)[100], char (*content)[100], int i){
+    int j = 0, k = 0, l = 0;
+    // Bubbble Sort Schedule
+    if(i != 0){
+        for(j = 0; j < i; j++){
+            for(k=0; k < i-j; k++){
+                
+                // Sort Year
+                if(date[0][k] > date[0][k+1]){
+                    int tmp_year, tmp_month, tmp_day;
+                    char tmp_content[100] = {0};
+                    
+                    tmp_year = date[0][k];
+                    tmp_month = date[1][k];
+                    tmp_day = date[2][k];
+                    strcpy(tmp_content, content[k]);
+                    date[0][k] = date[0][k+1];
+                    date[1][k] = date[1][k+1];
+                    date[2][k] = date[2][k+1];
+                    for(l = 0; l <= strlen(content[k+1]); l++){
+                        content[k][l] = content[k+1][l];
+                    }
+                    
+                    date[0][k+1] = tmp_year;
+                    date[1][k+1] = tmp_month;
+                    date[2][k+1] = tmp_day;
+                    for(l = 0; l <= strlen(content[k+1]); l++){
+                        content[k+1][l] = tmp_content[l];
+                    }
+                }
+                
+                // Sort Month
+                if(date[0][k] <= date[0][k+1]){
+                    if(date[1][k] > date[1][k+1]){
+                        int tmp_year, tmp_month, tmp_day;
+                        char tmp_content[100] = {0};
+                        
+                        tmp_year = date[0][k];
+                        tmp_month = date[1][k];
+                        tmp_day = date[2][k];
+                        strcpy(tmp_content, content[k]);
+                        date[0][k] = date[0][k+1];
+                        date[1][k] = date[1][k+1];
+                        date[2][k] = date[2][k+1];
+                        for(l = 0; l <= strlen(content[k+1]); l++){
+                            content[k][l] = content[k+1][l];
+                        }
+                        
+                        date[0][k+1] = tmp_year;
+                        date[1][k+1] = tmp_month;
+                        date[2][k+1] = tmp_day;
+                        for(l = 0; l <= strlen(content[k+1]); l++){
+                            content[k+1][l] = tmp_content[l];
+                        }
+                    }
+                }
+                
+                // Sort Day
+                if(date[0][k] <= date[0][k+1]){
+                    if(date[1][k] <= date[1][k+1]){
+                        if(date[2][k] > date[2][k+1]){
+                            int tmp_year, tmp_month, tmp_day;
+                            char tmp_content[100] = {0};
+                            
+                            tmp_year = date[0][k];
+                            tmp_month = date[1][k];
+                            tmp_day = date[2][k];
+                            strcpy(tmp_content, content[k]);
+                            date[0][k] = date[0][k+1];
+                            date[1][k] = date[1][k+1];
+                            date[2][k] = date[2][k+1];
+                            for(l = 0; l <= strlen(content[k+1]); l++){
+                                content[k][l] = content[k+1][l];
+                            }
+                            
+                            date[0][k+1] = tmp_year;
+                            date[1][k+1] = tmp_month;
+                            date[2][k+1] = tmp_day;
+                            for(l = 0; l <= strlen(content[k+1]); l++){
+                                content[k+1][l] = tmp_content[l];
+                            }
+                        }
+                    }
+                }
+                
+                // Sort Month
+                if(date[0][k] <= date[0][k+1]){
+                    if(date[1][k] > date[1][k+1]){
+                        int tmp_year, tmp_month, tmp_day;
+                        char tmp_content[100] = {0};
+                        
+                        tmp_year = date[0][k];
+                        tmp_month = date[1][k];
+                        tmp_day = date[2][k];
+                        strcpy(tmp_content, content[k]);
+                        date[0][k] = date[0][k+1];
+                        date[1][k] = date[1][k+1];
+                        date[2][k] = date[2][k+1];
+                        for(l = 0; l <= strlen(content[k+1]); l++){
+                            content[k][l] = content[k+1][l];
+                        }
+                        
+                        date[0][k+1] = tmp_year;
+                        date[1][k+1] = tmp_month;
+                        date[2][k+1] = tmp_day;
+                        for(l = 0; l <= strlen(content[k+1]); l++){
+                            content[k+1][l] = tmp_content[l];
+                        }
+                    }
+                }
+                
+                // Sort Year
+                if(date[0][k] > date[0][k+1]){
+                    int tmp_year, tmp_month, tmp_day;
+                    char tmp_content[100] = {0};
+                    
+                    tmp_year = date[0][k];
+                    tmp_month = date[1][k];
+                    tmp_day = date[2][k];
+                    strcpy(tmp_content, content[k]);
+                    date[0][k] = date[0][k+1];
+                    date[1][k] = date[1][k+1];
+                    date[2][k] = date[2][k+1];
+                    for(l = 0; l <= strlen(content[k+1]); l++){
+                        content[k][l] = content[k+1][l];
+                    }
+                    
+                    date[0][k+1] = tmp_year;
+                    date[1][k+1] = tmp_month;
+                    date[2][k+1] = tmp_day;
+                    for(l = 0; l <= strlen(content[k+1]); l++){
+                        content[k+1][l] = tmp_content[l];
+                    }
+                }
+            }
+        }
+    }
+}
 
 /****************************************************
  *                  Terminal_Clear                  *
