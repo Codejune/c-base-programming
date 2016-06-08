@@ -25,6 +25,8 @@
 
 int top = -1;                       // Remove Null Value
 
+int ccnt = 0;
+
 double Variable[26];                // Variable Value
 
 char Stack[1000] = {0};             // Operand Stack
@@ -604,7 +606,7 @@ void Postfix(char input[]) {
             }
         }
     }
-    //
+    
     while(!IsEmpty()) {
         if(Speek() != '(' && Speek() != ')') {
             width = 0;
@@ -617,10 +619,12 @@ void Postfix(char input[]) {
     printf("Postfix notation : ");
     for(m = 0; CalStack[m][0] != '\0'; m++){
         printf("%s ", CalStack[m]);
+        ccnt++;
     }
+    
     printf("\n");
     
-    sleep(2);
+    //sleep(2);
 }
 
 
@@ -682,9 +686,10 @@ double CalReturn(char op,double num1,double num2) {
  *                      Result                      *
  ****************************************************/
 double Result(char input[]) {
-    int i = 0,j,k;
+    int i = 0,j,k, m, l;
     int cnt = 0,num = 0;
     double result;
+    char temp[100] = {0};
     
     while(CalStack[i][0] != '\0') {
         if(CalStack[i][0] == '*' || CalStack[i][0] == '/' || CalStack[i][0] == '+' || CalStack[i][0] == '-') {
@@ -711,14 +716,22 @@ double Result(char input[]) {
             }
             
             result = CalReturn(CalStack[i][0],atof(CalStack[i-2]),atof(CalStack[i-1]));
-            sprintf(CalStack[i-2],"%.2lf",result);
+            
+            gcvt(result, 10, CalStack[i-2]);
             
             k = i+1;
             
             for(j = i-1; CalStack[k][0] != '\0'; j++) {
                 strcpy(CalStack[j],CalStack[k++]);
+                i++;
             }
+            ccnt-=2;
             
+            printf("Postfix notation : ");
+            for(m = 0; m < ccnt; m++){
+                printf("%s ", CalStack[m]);
+            }
+            printf("\n");
             i = 0;
             cnt--;
             continue;
@@ -898,7 +911,7 @@ void ScheduleManagement(void) {
                 Pause();
                 break;
                 
-            // Delete Schedule
+                // Delete Schedule
             case 2:
                 printf("입력 : ");
                 scanf("%d %d %d %s", &tmp_year, &tmp_month, &tmp_day, tmp_content);
@@ -932,7 +945,7 @@ void ScheduleManagement(void) {
                 Pause();
                 break;
                 
-            // View Schedule
+                // View Schedule
             case 3:
                 getchar();
                 if(date[0][i-1] != 0 && date[1][i-1] != 0 && date[2][i-1] != 0){
@@ -944,7 +957,7 @@ void ScheduleManagement(void) {
                 break;
                 
                 
-            // Exit Function
+                // Exit Function
             case 4:
                 getchar();
                 return;
@@ -982,7 +995,7 @@ void ClearSchedule(int (*date)[100], char (*content)[100], int i){
 void ViewSchedule(int (*date)[100], char (*content)[100], int cnt){
     int month_array[12] = {31,28,31,30,31,30,31,31,30,31,30,31};
     int i = 0, j = 0, k = 0, l = 0;
-    int total_1, total_2, total_day;
+    int total_year, total_month, total_day;
     int cycle, count, total_count, blank_count, space_count, blank_check;
     int dal;
     
@@ -992,8 +1005,8 @@ void ViewSchedule(int (*date)[100], char (*content)[100], int cnt){
         } else {
             
             TerminalClear();
-            total_1 = 0;
-            total_2 = 1;
+            total_year = 0;
+            total_month = 1;
             cycle = 0;
             count = 1;
             total_count = 1;
@@ -1010,7 +1023,7 @@ void ViewSchedule(int (*date)[100], char (*content)[100], int cnt){
                 } else {
                     dal = 365;
                 }
-                total_1 += dal;
+                total_year += dal;
             }
             
             // Calculate All of Month
@@ -1021,10 +1034,10 @@ void ViewSchedule(int (*date)[100], char (*content)[100], int cnt){
                 } else {
                     month_array[1] = 28;
                 }
-                total_2 += month_array[j];
+                total_month += month_array[j];
             }
             
-            total_day = total_1 + total_2;
+            total_day = total_year + total_month;
             
             printf("\n");
             printf("             %d년 %d월\n", date[0][i], date[1][i]);
