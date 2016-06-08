@@ -297,7 +297,7 @@ void Transformation(char input[]) {
     char temp[100] = {0};
     
     printf("Transformation : %s\n", input);
-    //sleep(2);
+    sleep(2);
     
     while(input[i] != '\0') {
         if(input[i] >= 65 && input[i] <= 90) {
@@ -320,7 +320,7 @@ void Transformation(char input[]) {
                 l++;
             }
             printf("Transformation : %s\n", input);
-            //sleep(2);
+            sleep(2);
             for(j = 0; j < 100; j++) {
                 temp[j] = '\0';
             }
@@ -495,7 +495,7 @@ void Transformation(char input[]) {
             }
             
             printf("Transformation : %s\n", input);
-            //sleep(2);
+            sleep(2);
         }
         i++;
     }
@@ -554,7 +554,7 @@ void Postfix(char input[]) {
                 for(m = 0; CalStack[m][0] != '\0'; m++)
                     printf("%s ", CalStack[m]);
                 printf("\n");
-                //sleep(2);
+                sleep(2);
                 break;
             }
         }
@@ -579,7 +579,7 @@ void Postfix(char input[]) {
                         }
                         
                         printf("\n");
-                        //sleep(2);
+                        sleep(2);
                         continue;
                     }
                     
@@ -596,7 +596,7 @@ void Postfix(char input[]) {
                     for(m = 0; CalStack[m][0] != '\0'; m++)
                         printf("%s ", CalStack[m]);
                     printf("\n");
-                    //sleep(2);
+                    sleep(2);
                     Spush(input[i++]);
                 } else {
                     Spush(input[i++]);
@@ -620,7 +620,7 @@ void Postfix(char input[]) {
     }
     printf("\n");
     
-    //sleep(2);
+    sleep(2);
 }
 
 
@@ -1289,7 +1289,7 @@ void Pause(void){
 void SyntaxError(void) {
     TerminalClear();
     printf("Syntax Error!\n");
-    //sleep(2);
+    sleep(2);
     TerminalClear();
     return;
 }
