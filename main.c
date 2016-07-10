@@ -206,7 +206,6 @@ void ScientificCalculate(void){
         
         Transformation(input);
         Postfix(input);
-        
         printf("결과 : %.2lf", Result(input));
         for(i = 0; i < strlen(input); i++) {
             for(j = 0; j < strlen(input); j++) {
@@ -575,11 +574,9 @@ void Postfix(char input[]) {
                         Spop();
                         i++;
                         printf("Postfix notation : ");
-                        
                         for(m = 0; CalStack[m][0] != '\0'; m++) {
                             printf("%s ", CalStack[m]);
                         }
-                        
                         printf("\n");
                         sleep(2);
                         continue;
@@ -623,8 +620,6 @@ void Postfix(char input[]) {
     }
     
     printf("\n");
-    
-    sleep(2);
 }
 
 
@@ -686,8 +681,8 @@ double CalReturn(char op,double num1,double num2) {
  *                      Result                      *
  ****************************************************/
 double Result(char input[]) {
-    int i = 0,j,k, m, l;
-    int cnt = 0,num = 0;
+    int i = 0,j,k, m, n, l;
+    int cnt = 0,num = 0, cycle = 0;
     double result;
     char temp[100] = {0};
     
@@ -725,13 +720,22 @@ double Result(char input[]) {
                 strcpy(CalStack[j],CalStack[k++]);
                 i++;
             }
-            ccnt-=2;
-            
+            sleep(2);
             printf("Postfix notation : ");
-            for(m = 0; m < ccnt; m++){
+            for(m = 0; CalStack[m][0] != '\0'; m++){
                 printf("%s ", CalStack[m]);
+                cycle++;
             }
             printf("\n");
+            
+            for(n = cycle; n > cycle-2; n--){
+                for(m = n-1; CalStack[m][0] != '\0'; m++){
+                    for(l = 0; l<100; l++){
+                        CalStack[m][l] = '\0';
+                    }
+                }
+            }
+            
             i = 0;
             cnt--;
             continue;
@@ -741,6 +745,8 @@ double Result(char input[]) {
         }
         i++;
     }
+    
+    sleep(2);
     return atof(CalStack[0]);
 }
 
